@@ -30,9 +30,9 @@
                                         <td>${client.name} ${client.surname}</td>
                                         <td> <fmt:formatNumber  value ="${client.balance}" type ="currency" /></td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/clients?accion=update&id=${client.id}"
+                                            <a href="${pageContext.request.contextPath}/clients?action=update&id=${client.id}"
                                                ><i class="fas fa-edit text-primary"></i></a>
-                                            <a href="${pageContext.request.contextPath}/clients?accion=delete&id=${client.id}"
+                                            <a href="${pageContext.request.contextPath}/clients?action=delete&id=${client.id}"
                                                ><i class="fas fa-trash text-danger"></i></a>
                                         </td>
                                     </tr>

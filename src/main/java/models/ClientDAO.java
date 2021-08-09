@@ -190,12 +190,12 @@ public class ClientDAO implements Crud {
             conn = DBConnection.getConnection();
             // Preparamos la consulta a realizar en la BD
             stmt = conn.prepareStatement(QUERY_SELECT_BY_ID);
-            // Ejecutamos la consulta
-            rs = stmt.executeQuery();
             // Ingresar parametros a la consulta preparada a realizar
             stmt.setInt(1, client.getId());
-            // Nos posicionamos al registro que hemos consultado
-            rs.absolute(1);
+            // Ejecutamos la consulta
+            rs = stmt.executeQuery();
+            // Nos posicionamos al registro que hemos consultado, por default ubica la primero buscado
+            rs.next();
 
             // Setiar valores
             client.setName(rs.getString("nombre"));
@@ -203,6 +203,7 @@ public class ClientDAO implements Crud {
             client.setEmail(rs.getString("email"));
             client.setPhone(rs.getString("telefono"));
             client.setBalance(rs.getDouble("saldo"));
+            System.out.println("CLIENTE DESDE DAO: " + client);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {

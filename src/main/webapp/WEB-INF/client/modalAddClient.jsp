@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group">
                         <label for="balance">Saldo</label>
-                        <input type="number" class="form-control" id="balance" name ="balance"  placeholder="Saldo" required>
+                        <input type="number" class="form-control" id="balance" name ="balance"  placeholder="Saldo" required step="any" >
                     </div>
 
                 </div>

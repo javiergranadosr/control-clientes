@@ -25,9 +25,35 @@ public class ClientController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse rep)
             throws ServletException, IOException {
-        this.index(req, rep);
+
+        String action = req.getParameter("action");
+
+        if (action != null) {
+            switch (action) {
+                case "update":
+                    this.clientUpdate(req, rep);
+                    break;
+                case "delete":
+                    this.delete(req, rep);
+                    break;
+                default:
+                    this.index(req, rep);
+            }
+
+        } else {
+            this.index(req, rep);
+        }
+
     }
 
+    /**
+     * Agregar, actualizar e eliminar cliente
+     *
+     * @param req
+     * @param rep
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse rep) throws ServletException, IOException {
         String action = req.getParameter("action");
@@ -36,6 +62,9 @@ public class ClientController extends HttpServlet {
             switch (action) {
                 case "create":
                     this.create(req, rep);
+                    break;
+                case "clientUpdate":
+                    this.updateClientAdd(req, rep);
                     break;
                 default:
                     this.index(req, rep);
@@ -112,6 +141,78 @@ public class ClientController extends HttpServlet {
             totalBalance += client.getBalance();
         }
         return totalBalance;
+    }
+
+    /**
+     * Actualizar un cliente
+     *
+     * @param req
+     * @param rep
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void clientUpdate(HttpServletRequest req, HttpServletResponse rep) throws ServletException, IOException {
+        // Recuperar el id cliente
+        int id = Integer.parseInt(req.getParameter("id"));
+
+        // Buscar al cliente en la base de datos
+        Client client = new ClientDAO().fetch(new Client(id));
+        req.setAttribute("client", client);
+        String jspUpdate = "/WEB-INF/client/clientUpdate.jsp";
+        req.getRequestDispatcher(jspUpdate).forward(req, rep);
+
+    }
+
+    /**
+     * Crear un nuevo cliente
+     *
+     * @param req
+     * @param rep
+     */
+    private void updateClientAdd(HttpServletRequest req, HttpServletResponse rep) throws ServletException, IOException {
+        // Obtener valores del formulario editar cliente
+
+        int id = Integer.parseInt(req.getParameter("id"));
+        String name = req.getParameter("nameClient");
+        String surname = req.getParameter("surname");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+
+        double balance = 0;
+        String balanceString = req.getParameter("balance");
+
+        if (balanceString != null && !"".equals(balanceString)) {
+            balance = Double.parseDouble(balanceString);
+        }
+
+        // Actualizamos el objeto de cliente (modelo)
+        Client client = new Client(id, name, surname, email, phone, balance);
+        // Guardarlo en la base de datos
+        int updateRegisters = new ClientDAO().update(client);
+        System.out.println("Registros modificados: " + updateRegisters);
+
+        // Redirigimos al index de la pagina
+        this.index(req, rep);
+    }
+
+    /**
+     * Eliminar un cliente
+     *
+     * @param req
+     * @param rep
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void delete(HttpServletRequest req, HttpServletResponse rep) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        // Eliminamos cliente
+        Client client = new Client(id);
+        System.out.println("CLIENTE ELIMINADO: " + client.toString());
+        int updateRegisters = new ClientDAO().delete(client);
+        System.out.println("Registros modificados: " + updateRegisters);
+        // Redirigimos al index de la pagina
+        this.index(req, rep);
+
     }
 
 }

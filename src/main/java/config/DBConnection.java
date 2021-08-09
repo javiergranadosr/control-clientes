@@ -17,6 +17,8 @@ public class DBConnection {
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "";
 
+    private static BasicDataSource dataSource;
+
     /**
      * Configurando nuestro pool de conexiones basico de 50 conexiones
      * disponibles
@@ -24,12 +26,15 @@ public class DBConnection {
      * @return
      */
     public static DataSource getDataSource() {
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUrl(JDBC_URL);
-        ds.setUsername(JDBC_USER);
-        ds.setPassword(JDBC_PASSWORD);
-        ds.setInitialSize(50);
-        return ds;
+        if (dataSource == null) {
+            dataSource = new BasicDataSource();
+            dataSource.setUrl(JDBC_URL);
+            dataSource.setUsername(JDBC_USER);
+            dataSource.setPassword(JDBC_PASSWORD);
+            dataSource.setInitialSize(50);
+        }
+
+        return dataSource;
     }
 
     /**
